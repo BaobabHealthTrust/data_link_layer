@@ -1,5 +1,5 @@
 tmp/
 Gemfile.lock
-log/
+log/*.log
 config/database.yml
 
