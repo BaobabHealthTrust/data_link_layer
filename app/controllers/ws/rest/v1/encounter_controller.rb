@@ -444,15 +444,28 @@ module Ws
                     
                         guuid = Encounter.guuid
                         
-                        encounter = Encounter.create(
-                                :patient_id => patient,
-                                :encounter_type => type, 
-                                :encounter_datetime => ((!params["encounterDatetime"].nil? ? params["encounterDatetime"].to_time : Time.now).strftime("%Y-%m-%d %H:%M")),
-                                :creator => provider,
-                                :location_id => location,
-                                :date_created => Time.now,
-                                :uuid => "#{guuid.to_s}"
-                            ) # rescue nil
+                        if Encounter.column_names.include?("provider_id")
+                            encounter = Encounter.create(
+                                    :patient_id => patient,
+                                    :encounter_type => type, 
+                                    :encounter_datetime => ((!params["encounterDatetime"].nil? ? params["encounterDatetime"].to_time : Time.now).strftime("%Y-%m-%d %H:%M")),
+                                    :creator => provider,
+                                    :provider_id => provider,
+                                    :location_id => location,
+                                    :date_created => Time.now,
+                                    :uuid => "#{guuid.to_s}"
+                                ) # rescue nil 
+                        else
+                            encounter = Encounter.create(
+                                    :patient_id => patient,
+                                    :encounter_type => type, 
+                                    :encounter_datetime => ((!params["encounterDatetime"].nil? ? params["encounterDatetime"].to_time : Time.now).strftime("%Y-%m-%d %H:%M")),
+                                    :creator => provider,
+                                    :location_id => location,
+                                    :date_created => Time.now,
+                                    :uuid => "#{guuid.to_s}"
+                                ) # rescue nil
+                        end
                             
                   # {"5242AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"=>"10", "authenticity_token"=>"3td5LO14shKgi/gNg9nDcfaBwEhjxUcH2PODwQAA4ro=", "encounter_type"=>"Vitals", "5090AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"=>"169", "5088AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"=>"36.7", "5087AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"=>"30", "5092AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"=>"12", "5089AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"=>"96.0", "5085AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"=>"120", "5086AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"=>"80"}
                   
